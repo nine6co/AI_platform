@@ -1,0 +1,114 @@
+/* =========================================
+   Sidebar 收合狀態 CSS
+   共用於所有頁面，請勿在個別頁面重複定義
+   ========================================= */
+
+/* 展開狀態：文字顯示 */
+.sidebar-text {
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    max-width: 200px;
+    display: inline-block;
+}
+
+/* 收合狀態：隱藏文字 */
+.collapsed .sidebar-text {
+    opacity: 0;
+    max-width: 0;
+    margin-left: 0 !important;
+}
+
+.collapsed .sidebar-logo {
+    margin-right: 0;
+}
+
+.collapsed .sidebar-header {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.collapsed .sidebar-item {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.collapsed [class*="space-x-"]> :not([hidden])~ :not([hidden]) {
+    margin-left: 0 !important;
+}
+
+.collapsed .sidebar-sub-container {
+    margin-left: 0 !important;
+    border-left-color: transparent !important;
+}
+
+.collapsed .sidebar-sub-item {
+    margin-left: 0 !important;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.collapsed .sidebar-arrow {
+    display: none;
+}
+
+/* =========================================
+   Sidebar 子選單 Hover 展開（index.html 用）
+   僅在包含 .sidebar-nav-group 的頁面生效
+   ========================================= */
+.sidebar-sub-container {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* 自定義捲軸樣式 (選配，讓介面更精緻) */
+.sidebar-sub-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-sub-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-sub-container::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.sidebar-sub-container::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+.sidebar-nav-group:hover .sidebar-sub-container {
+    max-height: 172px;
+    /* 約 4 個項目的高度 */
+    opacity: 1;
+    overflow-y: auto;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.sidebar-nav-group:hover .sidebar-arrow {
+    transform: rotate(90deg);
+}
+
+/* =========================================
+   其他頁面：Sub-menu 預設展開
+   在包含 .sidebar-sub-expanded 的頁面生效
+   ========================================= */
+.sidebar-sub-expanded .sidebar-sub-container {
+    max-height: 172px;
+    /* 約 4 個項目的高度 */
+    opacity: 1;
+    overflow-y: auto;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
