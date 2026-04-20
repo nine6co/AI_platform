@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Platform - 檔案管理</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#000093', /* 藍色 Blue-600 */
+                        primaryHover: '#000079', /* Blue-700 */
+                        background: '#F3F4F6', /* 淺灰 Gray-100 */
+                        surface: '#FFFFFF', /* 純白 White */
+                        border: '#E5E7EB', /* 邊框 Gray-200 */
+                        text: '#1F2937', /* 標題 Gray-800 */
+                        textMuted: '#6B7280', /* 說明 Gray-500 */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        body {
+            background-color: #F3F4F6;
+            color: #1F2937;
+        }
+
+        *:focus-visible {
+            outline: 2px solid #2563EB;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden antialiased" data-page="assistant-files">
+    <!-- components/sidebar.html — 共用側邊欄，由 js/components.js 動態載入 -->
+    <aside id="sidebar"
+        class="sidebar w-64 bg-surface border-r border-border flex flex-col h-full flex-shrink-0 z-30 relative transition-all duration-300">
+
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebarToggle"
+            class="absolute -right-3 top-7 w-6 h-6 bg-white border border-border rounded-full flex items-center justify-center text-textMuted hover:text-primary hover:border-primary shadow-sm z-40 transition-colors">
+            <i data-lucide="chevron-left" class="w-4 h-4 transition-transform duration-300" id="sidebarToggleIcon"></i>
+        </button>
+
+        <!-- Logo Area -->
+        <div class="sidebar-header h-20 flex items-center px-6 border-b border-border transition-all duration-300">
+            <div
+                class="sidebar-logo w-10 h-10 mr-3 flex-shrink-0 flex items-center justify-center transition-all duration-300">
+                <img src="img/logo.png" alt="AI Platform Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-xl font-bold tracking-tight text-primary sidebar-text pl-1">AI Platform</h1>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto overflow-x-hidden">
+
+            <!-- 儀表版 -->
+            <a id="nav-dashboard" href="index.html"
+                class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
+                <i data-lucide="layout-dashboard"
+                    class="w-5 h-5 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                <span class="font-medium sidebar-text pl-3">儀表版</span>
+            </a>
+
+            <!-- AI 應用入口 Group — class 由 components.js 動態設定 -->
+            <div id="nav-group" class="flex flex-col space-y-1">
+
+                <!-- 主分類（index 頁面 active 由 JS 設定） -->
+                <a id="nav-main" href="index.html"
+                    class="sidebar-item flex items-center justify-between px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <i data-lucide="sparkles"
+                            class="w-5 h-5 text-textMuted group-hover:text-primary flex-shrink-0"></i>
+                        <span class="font-bold sidebar-text pl-3">生成式AI應用入口</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-textMuted flex-shrink-0 sidebar-arrow"></i>
+                </a>
+
+                <!-- Sub-menu -->
+                <div
+                    class="sidebar-sub-container ml-5 border-l border-border mt-1 flex flex-col space-y-1 transition-all">
+
+                    <!-- 華寶 (AI助理系統) -->
+                    <a href="assistant.html" data-nav-key="assistant"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="bot"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">華寶 (AI助理系統)</span>
+                    </a>
+
+                    <!-- 文件翻譯 -->
+                    <a href="translation.html" data-nav-key="translation"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="languages"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">文件翻譯</span>
+                    </a>
+
+                    <!-- 語音會議記錄逐字稿 -->
+                    <a href="transcription.html" data-nav-key="transcription"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="mic"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">語音會議記錄逐字稿</span>
+                    </a>
+
+                    <!-- 會議記錄整理 -->
+                    <a href="minutes.html" data-nav-key="minutes"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="file-text"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">會議記錄整理</span>
+                    </a>
+
+                    <!-- 時事模擬情境 -->
+                    <a href="simulation.html" data-nav-key="simulation"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="lightbulb"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">時事模擬情境</span>
+                    </a>
+
+                    <!-- 金融業法規摘要 -->
+                    <a href="regulations.html" data-nav-key="regulations"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="scale"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">金融業法規摘要</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+
+    <!-- Main Content Context -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-background">
+
+        <!-- 4. 用戶與系統資訊 (Top Bar) -->
+        <header
+            class="bg-surface h-20 px-8 flex items-center justify-between z-20 sticky top-0 border-b border-border shadow-sm">
+            <div class="w-full flex items-center justify-between">
+                <div>
+                    <!-- 麵包屑/路徑管理 -->
+                    <nav class="flex items-center text-xs font-semibold text-textMuted mb-1.5">
+                        <a href="index.html" class="hover:text-primary transition-colors cursor-pointer">生成式AI應用</a>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 mx-1.5"></i>
+                        <span class="text-primary">華寶 (AI助理系統)</span>
+                    </nav>
+                    <div class="flex items-center space-x-4">
+                        <h2 class="text-2xl font-bold text-text flex items-center">
+                            檔案管理
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <!-- 返回華寶助理按鈕 -->
+                    <div class="hidden sm:block z-50">
+                        <a href="assistant.html"
+                            class="flex items-center space-x-2 px-4 py-2 border border-border bg-white rounded-lg text-sm font-semibold text-text hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors shadow-sm cursor-pointer">
+                            <i data-lucide="bot" class="w-4 h-4 text-primary"></i>
+                            <span>返回 AI 助理系統</span>
+                        </a>
+                    </div>
+
+                    <!--
+    components/topbar-user.html
+    ============================
+    頂部列「右側」共用區塊：通知鈴 + 使用者 Profile
+
+    使用說明：
+    - 此 component 僅包含右側的「通知」與「使用者」區塊
+    - 左側的 Breadcrumb 與頁面標題因頁面而異，請在各頁面自行定義
+    - 將此 component 放在 <header> 內的 <div class="flex items-center space-x-6"> 裡面
+
+    HTML 結構範例（各頁面的 header）：
+    ─────────────────────────────────
+    <header class="bg-surface h-20 px-8 flex items-center justify-between z-10 sticky top-0 border-b border-border shadow-sm">
+        <div>
+            [各頁面自定義：Breadcrumb + 頁面標題]
+        </div>
+        <div class="flex items-center space-x-6">
+            [貼入此 component 的內容]
+            [各頁面額外按鈕，如：檔案管理、搜尋框]
+        </div>
+    </header>
+-->
+
+                    <!-- Notification Button -->
+                    <button
+                        class="relative p-2 rounded-full hover:bg-gray-100 transition-colors text-textMuted hover:text-primary cursor-pointer"
+                        aria-label="通知">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <!-- 未讀紅點 -->
+                        <span
+                            class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="relative" id="userMenuContainer">
+                        <!-- User Profile Display (Trigger) -->
+                        <div id="userMenuButton"
+                            class="flex items-center space-x-3 cursor-pointer p-1.5 pr-3 rounded-full hover:bg-gray-50 border border-transparent transition-all">
+                            <div
+                                class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
+                                G
+                            </div>
+                            <div class="hidden md:flex flex-col">
+                                <span class="font-semibold text-sm leading-tight text-text">姓名</span>
+                                <span class="text-[8px] text-textMuted leading-tight">員工編號</span>
+                            </div>
+                            <i data-lucide="chevron-down"
+                                class="w-4 h-4 text-textMuted transition-transform duration-200" id="userMenuArrow"></i>
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div id="userDropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-2 z-50 transform origin-top-right transition-all duration-200 opacity-0 -translate-y-2">
+                            <button id="logoutBtn"
+                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer group">
+                                <i data-lucide="log-out"
+                                    class="w-4 h-4 mr-3 group-hover:scale-110 transition-transform"></i>
+                                登出系統
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </header>
+
+        <!-- 設定與操作區塊 -->
+        <div class="flex-1 overflow-hidden p-6 lg:p-8 flex flex-col items-center">
+
+            <!-- 工作區 白色 Panel -->
+            <div
+                class="w-full max-w-6xl bg-surface border border-border rounded-xl shadow-sm flex flex-col h-full overflow-hidden">
+
+                <div class="p-8 flex flex-col h-full">
+
+                    <!-- 組合式查詢欄 (Combo Search Bar) -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <!-- Dropdown filter -->
+                            <div class="relative">
+                                <select
+                                    class="appearance-none border border-border bg-gray-50 text-text rounded-lg py-2.5 pl-4 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm hover:bg-white transition-colors cursor-pointer w-32">
+                                    <option value="all">所有分類</option>
+                                    <option value="hr">人資</option>
+                                    <option value="deposit">存匯</option>
+                                    <option value="accounting">會計</option>
+                                    <option value="accounting">財富管理</option>
+                                    <option value="accounting">外匯</option>
+                                    <option value="credit">徵信授信</option>
+                                    <option value="accounting">勤務中心555</option>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-textMuted">
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+
+                            <!-- Search input -->
+                            <div class="relative flex-1 sm:w-64">
+                                <i data-lucide="search"
+                                    class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-textMuted"></i>
+                                <input type="text" placeholder="輸入關鍵字搜尋..."
+                                    class="w-full pl-9 pr-4 py-2.5 bg-white border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm transition-all text-text">
+                            </div>
+
+                            <!-- Search Button -->
+                            <button
+                                class="px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primaryHover transition-colors shadow-sm whitespace-nowrap">
+                                搜尋
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- 資料清單組件 (Data Table) -->
+                    <div class="flex-1 overflow-auto bg-white rounded-lg border border-border shadow-sm">
+                        <table class="w-full text-sm text-left">
+                            <thead
+                                class="text-xs text-textMuted uppercase bg-gray-50 border-b border-border sticky top-0 z-10">
+                                <tr>
+                                    <th scope="col" class="px-6 py-4 font-bold">檔案名稱</th>
+                                    <th scope="col" class="px-4 py-4 font-bold">檔案類型</th>
+                                    <th scope="col" class="px-4 py-4 font-bold">檔案分類</th>
+                                    <th scope="col" class="px-4 py-4 font-bold">文字長度</th>
+                                    <th scope="col" class="px-4 py-4 font-bold">上傳時間</th>
+                                    <th scope="col" class="px-4 py-4 font-bold">上傳者</th>
+                                </tr>
+                            </thead>
+                            <tbody id="files-table-body" class="divide-y divide-border">
+                                <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center group relative">
+                                            <i data-lucide="file-text"
+                                                class="w-4 h-4 text-primary mr-3 flex-shrink-0"></i>
+                                            <span
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">2026年內部徵信作業守則.pdf</span>
+                                            <!-- Inline Menu Icon -->
+                                            <div class="relative group/menu">
+                                                <button
+                                                    class="p-1 rounded hover:bg-gray-200 text-textMuted hover:text-text transition-colors">
+                                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                                </button>
+                                                <!-- Mock Hover Menu -->
+                                                <div
+                                                    class="absolute left-full ml-1 top-0 w-32 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-50">
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
+                                        PDF
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            徵信授信
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        12,450 字
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        2026-04-18 10:30
+                                    </td>
+                                    <td class="px-4 py-4 text-text">
+                                        吳小美
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center group relative">
+                                            <i data-lucide="file-spreadsheet"
+                                                class="w-4 h-4 text-green-600 mr-3 flex-shrink-0"></i>
+                                            <span
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">人資_Q2員工考核辦法_v3.xlsx</span>
+                                            <!-- Inline Menu Icon -->
+                                            <div class="relative group/menu">
+                                                <button
+                                                    class="p-1 rounded hover:bg-gray-200 text-textMuted hover:text-text transition-colors">
+                                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                                </button>
+                                                <!-- Mock Hover Menu -->
+                                                <div
+                                                    class="absolute left-full ml-1 top-0 w-32 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-50">
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
+                                        XLSX
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                            人資
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        3,200 字
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        2026-04-17 15:45
+                                    </td>
+                                    <td class="px-4 py-4 text-text">
+                                        王大明
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center group relative">
+                                            <i data-lucide="file" class="w-4 h-4 text-blue-500 mr-3 flex-shrink-0"></i>
+                                            <span
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">存匯業務Q&A懶人包.docx</span>
+                                            <!-- Inline Menu Icon -->
+                                            <div class="relative group/menu">
+                                                <button
+                                                    class="p-1 rounded hover:bg-gray-200 text-textMuted hover:text-text transition-colors">
+                                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                                </button>
+                                                <!-- Mock Hover Menu -->
+                                                <div
+                                                    class="absolute left-full ml-1 top-0 w-32 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-50">
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
+                                        DOCX
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            存匯
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        8,900 字
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        2026-04-16 09:12
+                                    </td>
+                                    <td class="px-4 py-4 text-text">
+                                        陳小花
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Summary -->
+                    <div class="mt-8 mb-6 flex flex-col sm:flex-row items-center justify-between">
+                        <div class="text-sm text-textMuted font-medium mb-4 sm:mb-0 flex flex-wrap items-center">
+                            顯示第 <span id="range-start" class="font-bold text-text mx-1">1</span> 到 <span id="range-end"
+                                class="font-bold text-text mx-1">3</span> 筆，共
+                            <span id="total-count" class="font-bold text-text mx-1">124</span> 筆
+                            <span class="ml-4 pl-4 border-l border-border flex items-center">
+                                每頁顯示
+                                <select id="itemsPerPage"
+                                    class="mx-2 bg-gray-50 border border-border text-text text-xs rounded-lg focus:ring-primary focus:border-primary block p-1.5 px-3 cursor-pointer hover:border-primary transition-all outline-none appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat bg-[right_0.5rem_center] pr-8 shadow-sm">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20" selected>20</option>
+                                </select>
+                                筆
+                            </span>
+                        </div>
+
+                        <div class="flex items-center space-x-2" id="pagination-controls">
+                            <button id="prevPage"
+                                class="w-8 h-8 flex items-center justify-center rounded border border-border bg-gray-50 text-gray-400 cursor-not-allowed transition-colors"
+                                disabled aria-label="上一頁">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+
+                            <div id="pageNumbers" class="flex items-center space-x-2">
+                                <!-- Page numbers will be generated by JS -->
+                            </div>
+
+                            <button id="nextPage"
+                                class="w-8 h-8 flex items-center justify-center rounded border border-border bg-surface text-textMuted hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer text-sm font-medium disabled:opacity-50"
+                                aria-label="下一頁">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            id="logoutModalBackdrop"></div>
+
+        <!-- Modal Content -->
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all duration-300 opacity-0 scale-95"
+            id="logoutModalContent">
+            <div class="flex flex-col items-center text-center">
+                <!-- Warning Icon -->
+                <div
+                    class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
+                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                </div>
+
+                <h3 class="text-xl font-bold text-text mb-2">確認要登出系統嗎？</h3>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full">
+                    <button id="logoutCancel"
+                        class="flex-1 px-6 py-3 rounded-xl border border-border text-text font-semibold hover:bg-gray-50 transition-colors cursor-pointer">
+                        取消
+                    </button>
+                    <button id="logoutConfirm"
+                        class="flex-1 px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 shadow-lg shadow-red-200 transition-all cursor-pointer">
+                        登出
+                    </button>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button id="logoutClose"
+                class="absolute top-4 right-4 p-2 text-textMuted hover:text-text hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="js/components.js"></script>
+    <script>
+        // 完整分頁邏輯 (Table 版本)
+        document.addEventListener('DOMContentLoaded', () => {
+            const itemsPerPageSelect = document.getElementById('itemsPerPage');
+            const tableBody = document.getElementById('files-table-body');
+            const rangeStart = document.getElementById('range-start');
+            const rangeEnd = document.getElementById('range-end');
+            const totalCount = document.getElementById('total-count');
+
+            const prevPageBtn = document.getElementById('prevPage');
+            const nextPageBtn = document.getElementById('nextPage');
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+
+            if (!itemsPerPageSelect || !tableBody) return;
+
+            let currentPage = 1;
+
+            const updatePagination = () => {
+                const limit = parseInt(itemsPerPageSelect.value);
+                const rows = Array.from(tableBody.querySelectorAll('tr'));
+                const total = rows.length;
+                const totalPages = Math.ceil(total / limit);
+
+                if (currentPage > totalPages) currentPage = totalPages || 1;
+
+                const startIdx = (currentPage - 1) * limit;
+                const endIdx = Math.min(startIdx + limit, total);
+
+                rows.forEach((row, index) => {
+                    if (index >= startIdx && index < endIdx) {
+                        row.classList.remove('hidden');
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+
+                if (rangeStart) rangeStart.textContent = total > 0 ? (startIdx + 1).toString() : '0';
+                if (rangeEnd) rangeEnd.textContent = endIdx.toString();
+                if (totalCount) totalCount.textContent = total.toString();
+
+                updateControls(totalPages);
+            };
+
+            const updateControls = (totalPages) => {
+                prevPageBtn.disabled = currentPage === 1;
+                prevPageBtn.className = currentPage === 1
+                    ? 'w-8 h-8 flex items-center justify-center rounded border border-border bg-gray-50 text-gray-400 cursor-not-allowed transition-colors'
+                    : 'w-8 h-8 flex items-center justify-center rounded border border-border bg-surface text-textMuted hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer';
+
+                nextPageBtn.disabled = currentPage === totalPages;
+                nextPageBtn.className = currentPage === totalPages
+                    ? 'w-8 h-8 flex items-center justify-center rounded border border-border bg-gray-50 text-gray-400 cursor-not-allowed transition-colors'
+                    : 'w-8 h-8 flex items-center justify-center rounded border border-border bg-surface text-textMuted hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer';
+
+                pageNumbersContainer.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = i;
+                    if (i === currentPage) {
+                        btn.className = 'w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-semibold text-sm cursor-pointer hover:bg-primaryHover transition-colors';
+                    } else {
+                        btn.className = 'w-8 h-8 flex items-center justify-center rounded border border-border bg-surface text-textMuted hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer text-sm font-medium';
+                    }
+                    btn.onclick = () => {
+                        currentPage = i;
+                        updatePagination();
+                    };
+                    pageNumbersContainer.appendChild(btn);
+                }
+            };
+
+            itemsPerPageSelect.addEventListener('change', () => {
+                currentPage = 1;
+                updatePagination();
+            });
+
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                const limit = parseInt(itemsPerPageSelect.value);
+                const total = tableBody.querySelectorAll('tr').length;
+                const totalPages = Math.ceil(total / limit);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+
+            setTimeout(updatePagination, 100);
+        });
+    </script>
+</body>
+
+</html>

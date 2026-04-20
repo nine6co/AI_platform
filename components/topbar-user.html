@@ -1,0 +1,93 @@
+<!--
+    components/topbar-user.html
+    ============================
+    頂部列「右側」共用區塊：通知鈴 + 使用者 Profile
+
+    使用說明：
+    - 此 component 僅包含右側的「通知」與「使用者」區塊
+    - 左側的 Breadcrumb 與頁面標題因頁面而異，請在各頁面自行定義
+    - 將此 component 放在 <header> 內的 <div class="flex items-center space-x-6"> 裡面
+
+    HTML 結構範例（各頁面的 header）：
+    ─────────────────────────────────
+    <header class="bg-surface h-20 px-8 flex items-center justify-between z-10 sticky top-0 border-b border-border shadow-sm">
+        <div>
+            [各頁面自定義：Breadcrumb + 頁面標題]
+        </div>
+        <div class="flex items-center space-x-6">
+            [貼入此 component 的內容]
+            [各頁面額外按鈕，如：檔案管理、搜尋框]
+        </div>
+    </header>
+-->
+
+<!-- Notification Button -->
+<button
+    class="relative p-2 rounded-full hover:bg-gray-100 transition-colors text-textMuted hover:text-primary cursor-pointer"
+    aria-label="通知">
+    <i data-lucide="bell" class="w-5 h-5"></i>
+    <!-- 未讀紅點 -->
+    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+
+<!-- User Profile Dropdown -->
+<div class="relative" id="userMenuContainer">
+    <!-- User Profile Display (Trigger) -->
+    <div id="userMenuButton"
+        class="flex items-center space-x-3 cursor-pointer p-1.5 pr-3 rounded-full hover:bg-gray-50 border border-transparent transition-all">
+        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
+            G
+        </div>
+        <div class="hidden md:flex flex-col">
+            <span class="font-semibold text-sm leading-tight text-text">姓名</span>
+            <span class="text-[8px] text-textMuted leading-tight">員工編號</span>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-textMuted transition-transform duration-200"
+            id="userMenuArrow"></i>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="userDropdown"
+        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-2 z-50 transform origin-top-right transition-all duration-200 opacity-0 -translate-y-2">
+        <button id="logoutBtn"
+            class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer group">
+            <i data-lucide="log-out" class="w-4 h-4 mr-3 group-hover:scale-110 transition-transform"></i>
+            登出系統
+        </button>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="logoutModalBackdrop"></div>
+
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all duration-300 opacity-0 scale-95"
+        id="logoutModalContent">
+        <div class="flex flex-col items-center text-center">
+            <!-- Warning Icon -->
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
+                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+            </div>
+
+            <h3 class="text-xl font-bold text-text mb-2">確認要登出系統嗎？</h3>
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full">
+                <button id="logoutCancel"
+                    class="flex-1 px-6 py-3 rounded-xl border border-border text-text font-semibold hover:bg-gray-50 transition-colors cursor-pointer">
+                    取消
+                </button>
+                <button id="logoutConfirm"
+                    class="flex-1 px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 shadow-lg shadow-red-200 transition-all cursor-pointer">
+                    登出
+                </button>
+            </div>
+        </div>
+
+        <!-- Close Button -->
+        <button id="logoutClose"
+            class="absolute top-4 right-4 p-2 text-textMuted hover:text-text hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+    </div>
+</div>

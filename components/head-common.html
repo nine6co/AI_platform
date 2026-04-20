@@ -1,0 +1,72 @@
+<!--
+    components/head-common.html
+    ============================
+    各頁面 <head> 的共用設定
+
+    使用說明：
+    - 將此 component 的「內容」（不含 HTML 標籤本身）複製貼入各頁面的 <head> 中
+    - <title> 請在各頁面自行定義，放在此 component include 之後
+
+    完整引用範例：
+    ─────────────────────────────────
+    <head>
+        [此 component 的全部內容]
+        <title>AI Chatbot Platform - [頁面名稱]</title>
+        [頁面專屬的額外 CSS，例如：]
+        <style>
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+    </head>
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+<!-- Tailwind CSS (via CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                },
+                colors: {
+                    primary: '#000093',       /* 藍色 Blue-600 */
+                    primaryHover: '#000079',  /* Blue-700 */
+                    background: '#F3F4F6',    /* 淺灰 Gray-100 */
+                    surface: '#FFFFFF',       /* 純白 White */
+                    border: '#E5E7EB',        /* 邊框 Gray-200 */
+                    text: '#1F2937',          /* 標題 Gray-800 */
+                    textMuted: '#6B7280',     /* 說明 Gray-500 */
+                }
+            }
+        }
+    }
+</script>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- 全域基礎樣式 -->
+<style>
+    body {
+        background-color: #F3F4F6;
+        color: #1F2937;
+    }
+
+    /* 確保焦點狀態符合無障礙規範 */
+    *:focus-visible {
+        outline: 2px solid #2563EB;
+        outline-offset: 2px;
+    }
+</style>
+
+<!-- Sidebar 共用樣式 -->
+<link rel="stylesheet" href="css/sidebar.css">
