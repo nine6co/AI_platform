@@ -266,16 +266,16 @@
                         <div class="flex items-center space-x-3 w-full sm:w-auto">
                             <!-- Dropdown filter -->
                             <div class="relative">
-                                <select
+                                <select id="categoryFilter"
                                     class="appearance-none border border-border bg-gray-50 text-text rounded-lg py-2.5 pl-4 pr-10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm hover:bg-white transition-colors cursor-pointer w-32">
                                     <option value="all">所有分類</option>
-                                    <option value="hr">人資</option>
-                                    <option value="deposit">存匯</option>
-                                    <option value="accounting">會計</option>
-                                    <option value="accounting">財富管理</option>
-                                    <option value="accounting">外匯</option>
-                                    <option value="credit">徵信授信</option>
-                                    <option value="accounting">勤務中心555</option>
+                                    <option value="人資">人資</option>
+                                    <option value="存匯">存匯</option>
+                                    <option value="會計">會計</option>
+                                    <option value="財富管理">財富管理</option>
+                                    <option value="外匯">外匯</option>
+                                    <option value="徵信授信">徵信授信</option>
+                                    <option value="勤務中心555">勤務中心555</option>
                                 </select>
                                 <div
                                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-textMuted">
@@ -287,17 +287,16 @@
                             <div class="relative flex-1 sm:w-64">
                                 <i data-lucide="search"
                                     class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-textMuted"></i>
-                                <input type="text" placeholder="輸入關鍵字搜尋..."
+                                <input type="text" id="searchInput" placeholder="輸入關鍵字搜尋..."
                                     class="w-full pl-9 pr-4 py-2.5 bg-white border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm transition-all text-text">
                             </div>
 
                             <!-- Search Button -->
-                            <button
+                            <button id="searchBtn"
                                 class="px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primaryHover transition-colors shadow-sm whitespace-nowrap">
                                 搜尋
                             </button>
                         </div>
-
                     </div>
 
                     <!-- 資料清單組件 (Data Table) -->
@@ -315,6 +314,96 @@
                                 </tr>
                             </thead>
                             <tbody id="files-table-body" class="divide-y divide-border">
+                                <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center group relative">
+                                            <i data-lucide="file-text"
+                                                class="w-4 h-4 text-primary mr-3 flex-shrink-0"></i>
+                                            <span
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">特休計算方式.pdf</span>
+                                            <!-- Inline Menu Icon -->
+                                            <div class="relative group/menu">
+                                                <button
+                                                    class="p-1 rounded hover:bg-gray-200 text-textMuted hover:text-text transition-colors">
+                                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                                </button>
+                                                <!-- Mock Hover Menu -->
+                                                <div
+                                                    class="absolute left-full ml-1 top-0 w-32 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-50">
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
+                                        PDF
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                            人資
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        1,200 字
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        2026-04-21 22:38
+                                    </td>
+                                    <td class="px-4 py-4 text-text">
+                                        系統管理員
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center group relative">
+                                            <i data-lucide="file-text"
+                                                class="w-4 h-4 text-primary mr-3 flex-shrink-0"></i>
+                                            <span
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">2026年度員工特別休假實施辦法.pdf</span>
+                                            <!-- Inline Menu Icon -->
+                                            <div class="relative group/menu">
+                                                <button
+                                                    class="p-1 rounded hover:bg-gray-200 text-textMuted hover:text-text transition-colors">
+                                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                                </button>
+                                                <!-- Mock Hover Menu -->
+                                                <div
+                                                    class="absolute left-full ml-1 top-0 w-32 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-50">
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
+                                                    <a href="#"
+                                                        class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
+                                                            data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
+                                        PDF
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                            人資
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        5,600 字
+                                    </td>
+                                    <td class="px-4 py-4 text-textMuted">
+                                        2026-04-21 21:58
+                                    </td>
+                                    <td class="px-4 py-4 text-text">
+                                        系統管理員
+                                    </td>
+                                </tr>
                                 <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center group relative">
@@ -367,7 +456,7 @@
                                             <i data-lucide="file-spreadsheet"
                                                 class="w-4 h-4 text-green-600 mr-3 flex-shrink-0"></i>
                                             <span
-                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">人資_Q2員工考核辦法_v3.xlsx</span>
+                                                class="font-medium text-text group-hover:text-primary transition-colors mr-2">人資_Q2員工考核辦法_v3.docx</span>
                                             <!-- Inline Menu Icon -->
                                             <div class="relative group/menu">
                                                 <button
@@ -388,7 +477,7 @@
                                         </div>
                                     </td>
                                     <td class="px-4 py-4 text-textMuted font-medium uppercase text-xs">
-                                        XLSX
+                                        DOCX
                                     </td>
                                     <td class="px-4 py-4">
                                         <span
@@ -501,16 +590,14 @@
     <!-- Logout Confirmation Modal -->
     <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-            id="logoutModalBackdrop"></div>
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="logoutModalBackdrop"></div>
 
         <!-- Modal Content -->
         <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all duration-300 opacity-0 scale-95"
             id="logoutModalContent">
             <div class="flex flex-col items-center text-center">
                 <!-- Warning Icon -->
-                <div
-                    class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
+                <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
                     <i data-lucide="alert-triangle" class="w-8 h-8"></i>
                 </div>
 
@@ -549,14 +636,51 @@
             const nextPageBtn = document.getElementById('nextPage');
             const pageNumbersContainer = document.getElementById('pageNumbers');
 
+            const categoryFilter = document.getElementById('categoryFilter');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+
             if (!itemsPerPageSelect || !tableBody) return;
 
             let currentPage = 1;
+            let allRows = Array.from(tableBody.querySelectorAll('tr'));
+
+            // Check for search query in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query && searchInput) {
+                searchInput.value = query;
+                
+                // Also handle automatic category selection if matching
+                const options = Array.from(categoryFilter.options);
+                const matchedOption = options.find(opt => opt.text === query || opt.value === query);
+                if (matchedOption) {
+                    categoryFilter.value = matchedOption.value;
+                }
+            }
 
             const updatePagination = () => {
                 const limit = parseInt(itemsPerPageSelect.value);
-                const rows = Array.from(tableBody.querySelectorAll('tr'));
-                const total = rows.length;
+                const category = categoryFilter.value;
+                const keyword = searchInput.value.toLowerCase().trim();
+
+                // 1. Filter rows
+                const filteredRows = allRows.filter(row => {
+                    const fileName = row.cells[0].textContent.toLowerCase();
+                    const fileCategory = row.cells[2].textContent.trim();
+                    
+                    const matchesCategory = category === 'all' || fileCategory.includes(category);
+                    
+                    // 關鍵字搜尋：同時比對「檔案名稱」與「檔案分類」
+                    const matchesKeyword = keyword === '' || 
+                                         fileName.includes(keyword) || 
+                                         fileCategory.toLowerCase().includes(keyword);
+                    
+                    return matchesCategory && matchesKeyword;
+                });
+
+                // 2. Paginate filtered rows
+                const total = filteredRows.length;
                 const totalPages = Math.ceil(total / limit);
 
                 if (currentPage > totalPages) currentPage = totalPages || 1;
@@ -564,11 +688,13 @@
                 const startIdx = (currentPage - 1) * limit;
                 const endIdx = Math.min(startIdx + limit, total);
 
-                rows.forEach((row, index) => {
+                // Hide all first
+                allRows.forEach(row => row.classList.add('hidden'));
+
+                // Show only current page of filtered rows
+                filteredRows.forEach((row, index) => {
                     if (index >= startIdx && index < endIdx) {
                         row.classList.remove('hidden');
-                    } else {
-                        row.classList.add('hidden');
                     }
                 });
 
@@ -621,12 +747,56 @@
 
             nextPageBtn.addEventListener('click', () => {
                 const limit = parseInt(itemsPerPageSelect.value);
-                const total = tableBody.querySelectorAll('tr').length;
-                const totalPages = Math.ceil(total / limit);
+                const keyword = searchInput.value.toLowerCase().trim();
+                const category = categoryFilter.value;
+                const filteredTotal = allRows.filter(row => {
+                    const matchesCategory = category === 'all' || row.cells[2].textContent.trim().includes(category);
+                    const matchesKeyword = keyword === '' || row.cells[0].textContent.toLowerCase().includes(keyword);
+                    return matchesCategory && matchesKeyword;
+                }).length;
+                
+                const totalPages = Math.ceil(filteredTotal / limit);
                 if (currentPage < totalPages) {
                     currentPage++;
                     updatePagination();
                 }
+            });
+
+            // 監聽搜尋按鈕 (保留供點擊使用)
+            searchBtn.addEventListener('click', () => {
+                currentPage = 1;
+                updatePagination();
+            });
+
+            // 動態搜尋：監聽輸入框 input 變動 (實時過濾)
+            searchInput.addEventListener('input', () => {
+                const keyword = searchInput.value.trim();
+                
+                // 自動偵測：如果關鍵字剛好匹配某個分類，自動切換下拉選單
+                const options = Array.from(categoryFilter.options);
+                const matchedOption = options.find(opt => opt.text === keyword || opt.value === keyword);
+                
+                if (matchedOption && keyword !== '') {
+                    categoryFilter.value = matchedOption.value;
+                    // searchInput.value = ''; // 選項：匹配後是否清除關鍵字？通常保留較好
+                }
+
+                currentPage = 1;
+                updatePagination();
+            });
+
+            // 監聽輸入框 Enter 鍵
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    currentPage = 1;
+                    updatePagination();
+                }
+            });
+
+            // 監聽分類切換
+            categoryFilter.addEventListener('change', () => {
+                currentPage = 1;
+                updatePagination();
             });
 
             setTimeout(updatePagination, 100);

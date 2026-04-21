@@ -40,19 +40,33 @@
 
     <link rel="stylesheet" href="css/sidebar.css">
     <style>
-        body {
-            background-color: #F3F4F6;
-            color: #1F2937;
+        /* Toast Animation */
+        #statusToast {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        *:focus-visible {
-            outline: 2px solid #2563EB;
-            outline-offset: 2px;
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.4s ease-out forwards;
         }
     </style>
 </head>
 
 <body class="flex h-screen overflow-hidden antialiased" data-page="transcription">
+    <!-- Status Toast -->
+    <div id="statusToast"
+        class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 z-[100] pointer-events-none">
+        <div id="toastContent"
+            class="bg-primary text-white px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-3 font-bold">
+            <div id="toastIcon">
+                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+            </div>
+            <span id="toastMessage">處理中...</span>
+        </div>
+    </div>
     <!-- components/sidebar.html — 共用側邊欄，由 js/components.js 動態載入 -->
 <aside id="sidebar"
     class="sidebar w-64 bg-surface border-r border-border flex flex-col h-full flex-shrink-0 z-20 relative transition-all duration-300">
@@ -297,9 +311,9 @@
                                 <label class="block text-sm font-bold text-text mb-2">
                                     上傳音檔 <span class="text-red-500">*</span>
                                 </label>
-                                <div
-                                    class="mt-2 flex justify-center px-6 pt-10 pb-10 border-2 border-dashed border-gray-300 rounded-xl hover:border-primary hover:bg-blue-50/30 transition-all cursor-pointer group">
-                                    <div class="space-y-2 text-center flex flex-col items-center">
+                                <div id="dropZone"
+                                    class="mt-2 flex flex-col justify-center px-6 pt-10 pb-10 border-2 border-dashed border-gray-300 rounded-xl hover:border-primary hover:bg-blue-50/30 transition-all cursor-pointer group">
+                                    <div id="uploadPrompt" class="space-y-2 text-center flex flex-col items-center">
                                         <div
                                             class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-3 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
                                             <i data-lucide="upload-cloud" class="w-6 h-6"></i>
@@ -317,6 +331,61 @@
                                             支援 .mp3, .m4a, .wav 格式
                                         </p>
                                     </div>
+
+                                    <!-- File List Container -->
+                                    <div id="fileList" class="mt-4 space-y-2 hidden w-full max-w-md mx-auto px-4">
+                                        <!-- Items injected here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Result Preview Area (Hidden by default) -->
+                            <div id="resultPreview"
+                                class="mt-8 p-6 bg-gray-50 border border-border rounded-xl hidden animate-fade-in">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-sm font-bold text-text flex items-center">
+                                        <i data-lucide="file-text" class="w-4 h-4 mr-2 text-primary"></i>
+                                        逐字稿生成結果預覽
+                                    </h4>
+                                    <span
+                                        class="text-[10px] font-bold text-textMuted uppercase tracking-widest bg-white px-2 py-1 rounded border border-border">AI
+                                        生成內容</span>
+                                </div>
+                                <div
+                                    class="bg-white border border-border rounded-lg p-5 text-sm text-text leading-relaxed shadow-sm">
+                                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                                        <p class="font-bold text-primary flex items-center">
+                                            <i data-lucide="headphones" class="w-4 h-4 mr-2"></i>
+                                            音檔名稱: <span id="previewFileName" class="ml-1 text-text">...</span>
+                                        </p>
+                                        <span class="text-xs text-textMuted">時長: 05:24</span>
+                                    </div>
+                                    
+                                    <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                                        <div class="flex space-x-3">
+                                            <span class="text-[10px] font-bold text-primary bg-blue-50 px-1.5 py-0.5 rounded h-fit mt-1">00:12</span>
+                                            <p class="text-text/80"><span class="font-bold text-text">發言人 A:</span> 各位好，今天我們要討論的是關於 2024 年度的預算分配方案。</p>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <span class="text-[10px] font-bold text-primary bg-blue-50 px-1.5 py-0.5 rounded h-fit mt-1">00:45</span>
+                                            <p class="text-text/80"><span class="font-bold text-text">發言人 B:</span> 我認為研發部門的比例應該再提高 5%，以應對目前的市場競爭。</p>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <span class="text-[10px] font-bold text-primary bg-blue-50 px-1.5 py-0.5 rounded h-fit mt-1">01:20</span>
+                                            <p class="text-text/80"><span class="font-bold text-text">發言人 A:</span> 同意，但這部分的資金可能需要從行銷預算中挪用，大家怎麼看？</p>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <span class="text-[10px] font-bold text-primary bg-blue-50 px-1.5 py-0.5 rounded h-fit mt-1">02:05</span>
+                                            <p class="text-text/80"><span class="font-bold text-text">發言人 C:</span> 如果行銷預算減少，我們下半年的產品推廣活動可能會受到影響...</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4 pt-4 border-t border-gray-100 text-xs text-textMuted flex items-center justify-between">
+                                        <span class="flex items-center">
+                                            <i data-lucide="info" class="w-3.5 h-3.5 mr-1.5"></i>
+                                            全文共 1,240 字，已完成語音分段標記。
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -325,14 +394,14 @@
                             <!-- 進一步處理或動作觸發 -->
                             <div class="flex items-center justify-end space-x-4 pt-2">
                                 <!-- Disabled 下載按鈕 (尚未處理完成) -->
-                                <button type="button"
+                                <button id="downloadBtn" type="button"
                                     class="px-5 py-2.5 flex items-center rounded-lg border border-border bg-gray-50 text-gray-400 font-bold text-sm cursor-not-allowed transition-colors"
                                     disabled title="處理完成後開放下載">
                                     <i data-lucide="download-cloud" class="w-4 h-4 mr-2"></i>
                                     下載
                                 </button>
                                 <!-- 送出按鈕 -->
-                                <button type="submit"
+                                <button id="submitBtn" type="submit"
                                     class="px-5 py-2.5 flex items-center rounded-lg bg-primary text-white font-bold text-sm hover:bg-primaryHover transition-colors shadow-sm">
                                     <i data-lucide="send" class="w-4 h-4 mr-2"></i>
                                     送出
@@ -348,6 +417,229 @@
     </main>
 
     <script src="js/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('file-upload');
+            const fileList = document.getElementById('fileList');
+            const uploadPrompt = document.getElementById('uploadPrompt');
+
+            let selectedFiles = [];
+
+            // Trigger file input - only if not clicking on the remove button
+            dropZone.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-file-main')) return;
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            // Drag and Drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-primary', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-primary', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary', 'bg-blue-50');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            function handleFiles(files) {
+                const newFiles = Array.from(files);
+                selectedFiles = [...selectedFiles, ...newFiles];
+                updateFileList();
+            }
+
+            function updateFileList() {
+                if (selectedFiles.length === 0) {
+                    fileList.classList.add('hidden');
+                    uploadPrompt.classList.remove('hidden');
+                    return;
+                }
+
+                fileList.classList.remove('hidden');
+                uploadPrompt.classList.add('hidden'); // Hide prompt when files are selected
+
+                fileList.innerHTML = '';
+                selectedFiles.forEach((file, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center justify-between p-3 bg-white border border-border rounded-lg shadow-sm hover:border-primary transition-all mb-2';
+
+                    const size = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+                    item.innerHTML = `
+                        <div class="flex items-center space-x-3 overflow-hidden">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-primary flex-shrink-0">
+                                <i data-lucide="music" class="w-4 h-4"></i>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-sm font-semibold text-text truncate">${file.name}</span>
+                                <span class="text-[10px] text-textMuted font-bold uppercase tracking-wider">${size}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="p-1.5 text-textMuted hover:text-red-500 hover:bg-red-50 rounded-md transition-all remove-file-main" data-index="${index}">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                    fileList.appendChild(item);
+                });
+
+                lucide.createIcons();
+
+                // Add remove functionality
+                document.querySelectorAll('.remove-file-main').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const idx = parseInt(btn.getAttribute('data-index'));
+                        selectedFiles.splice(idx, 1);
+                        updateFileList();
+                    });
+                });
+            }
+
+            // Transcription Submission Logic
+            const transcriptionForm = document.querySelector('form');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const statusToast = document.getElementById('statusToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastContent = document.getElementById('toastContent');
+            const toastIcon = document.getElementById('toastIcon');
+            const resultPreview = document.getElementById('resultPreview');
+            const previewFileName = document.getElementById('previewFileName');
+
+            function showStatus(message, type = 'loading') {
+                toastMessage.textContent = message;
+
+                if (type === 'success') {
+                    toastContent.classList.remove('bg-primary');
+                    toastContent.classList.add('bg-green-500');
+                    toastIcon.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i>';
+                } else if (type === 'error') {
+                    toastContent.classList.remove('bg-primary');
+                    toastContent.classList.add('bg-red-500');
+                    toastIcon.innerHTML = '<i data-lucide="alert-circle" class="w-5 h-5"></i>';
+                } else {
+                    toastContent.classList.add('bg-primary');
+                    toastContent.classList.remove('bg-green-500', 'bg-red-500');
+                    toastIcon.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>';
+                }
+
+                lucide.createIcons();
+
+                statusToast.classList.remove('-translate-y-20', 'opacity-0');
+                statusToast.classList.add('translate-y-0', 'opacity-100');
+
+                if (type !== 'loading') {
+                    setTimeout(() => {
+                        statusToast.classList.add('-translate-y-20', 'opacity-0');
+                        statusToast.classList.remove('translate-y-0', 'opacity-100');
+                    }, 3000);
+                }
+            }
+
+            transcriptionForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                if (selectedFiles.length === 0) {
+                    showStatus('請先選擇欲轉錄的音檔', 'error');
+                    return;
+                }
+
+                // Simulate processing
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i>轉錄中...';
+                lucide.createIcons();
+
+                showStatus('音檔轉錄處理中，請稍候...', 'loading');
+
+                setTimeout(() => {
+                    showStatus('音檔轉錄完成！', 'success');
+
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i data-lucide="send" class="w-4 h-4 mr-2"></i>重新送出';
+                    lucide.createIcons();
+
+                    // Enable Download Button with active style
+                    downloadBtn.disabled = false;
+                    downloadBtn.classList.remove('bg-gray-50', 'text-gray-400', 'cursor-not-allowed');
+                    downloadBtn.classList.add('bg-green-600', 'text-white', 'border-transparent', 'hover:bg-green-700', 'shadow-md', 'shadow-green-900/20');
+                    downloadBtn.title = '點擊下載逐字稿';
+
+                    // Show Preview
+                    previewFileName.textContent = selectedFiles[0].name;
+                    resultPreview.classList.remove('hidden');
+                    resultPreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    // Mark file as processed in UI
+                    document.querySelectorAll('#fileList > div').forEach((item, idx) => {
+                        if (idx === 0) { // Highlight the first file
+                            const statusBadge = document.createElement('span');
+                            statusBadge.className = 'ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700';
+                            statusBadge.innerHTML = '<i data-lucide="check" class="w-2.5 h-2.5 mr-1"></i>已轉錄';
+                            item.querySelector('.flex.flex-col').appendChild(statusBadge);
+                            lucide.createIcons();
+                        }
+                    });
+
+                }, 2500);
+            });
+
+            // Handle Download Action
+            downloadBtn.addEventListener('click', () => {
+                if (downloadBtn.disabled) return;
+
+                const fileName = selectedFiles.length > 0 ? `${selectedFiles[0].name.split('.')[0]}_逐字稿.txt` : 'Meeting_Transcription.txt';
+
+                const content = `會議語音轉錄逐字稿 (AI Platform Mock Result)
+=======================================
+處理時間: ${new Date().toLocaleString()}
+音檔名稱: ${selectedFiles.length > 0 ? selectedFiles[0].name : '未知'}
+音檔時長: 05:24
+
+[逐字稿內容]
+---------------------------------------
+[00:12] 發言人 A: 各位好，今天我們要討論的是關於 2024 年度的預算分配方案。
+[00:45] 發言人 B: 我認為研發部門的比例應該再提高 5%，以應對目前的市場競爭。
+[01:20] 發言人 A: 同意，但這部分的資金可能需要從行銷預算中挪用，大家怎麼看？
+[02:05] 發言人 C: 如果行銷預算減少，我們下半年的產品推廣活動可能會受到影響...
+[03:15] 發言人 A: 那我們是否可以考慮優化行政支出？
+[04:10] 發言人 B: 行政支出已經在上一季縮減過了，目前的空間不大。
+[05:00] 發言人 A: 了解，那我們今天先針對研發與行銷的平衡點做深入討論。
+---------------------------------------
+
+[技術摘要]
+- 模型版本: Whisper-v3 Large
+- 語音辨識率: 99.2%
+- 說話者分離: 已啟用 (3 位發言人)
+
+---------------------------------------
+本文件僅供 Demo 使用。
+`;
+
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                showStatus('逐字稿下載已開始', 'success');
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -61,108 +61,122 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Toast Animation */
+        #toast {
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
     </style>
 </head>
 
 <body class="flex h-screen overflow-hidden antialiased" data-page="assistant">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-20 opacity-0 z-[100] pointer-events-none">
+        <div class="bg-red-500 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-3 font-bold">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+            <span>請先選擇對話情境！</span>
+        </div>
+    </div>
     <!-- Sidebar Component (動態載入) -->
     <!-- components/sidebar.html — 共用側邊欄，由 js/components.js 動態載入 -->
-<aside id="sidebar"
-    class="sidebar w-64 bg-surface border-r border-border flex flex-col h-full flex-shrink-0 z-20 relative transition-all duration-300">
+    <aside id="sidebar"
+        class="sidebar w-64 bg-surface border-r border-border flex flex-col h-full flex-shrink-0 z-20 relative transition-all duration-300">
 
-    <!-- Sidebar Toggle Button -->
-    <button id="sidebarToggle"
-        class="absolute -right-3 top-7 w-6 h-6 bg-white border border-border rounded-full flex items-center justify-center text-textMuted hover:text-primary hover:border-primary shadow-sm z-30 transition-colors">
-        <i data-lucide="chevron-left" class="w-4 h-4 transition-transform duration-300" id="sidebarToggleIcon"></i>
-    </button>
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebarToggle"
+            class="absolute -right-3 top-7 w-6 h-6 bg-white border border-border rounded-full flex items-center justify-center text-textMuted hover:text-primary hover:border-primary shadow-sm z-30 transition-colors">
+            <i data-lucide="chevron-left" class="w-4 h-4 transition-transform duration-300" id="sidebarToggleIcon"></i>
+        </button>
 
-    <!-- Logo Area -->
-    <div class="sidebar-header h-20 flex items-center px-6 border-b border-border transition-all duration-300">
-        <div
-            class="sidebar-logo w-10 h-10 mr-3 flex-shrink-0 flex items-center justify-center transition-all duration-300">
-            <img src="img/logo.png" alt="AI Platform Logo" class="w-full h-full object-contain">
+        <!-- Logo Area -->
+        <div class="sidebar-header h-20 flex items-center px-6 border-b border-border transition-all duration-300">
+            <div
+                class="sidebar-logo w-10 h-10 mr-3 flex-shrink-0 flex items-center justify-center transition-all duration-300">
+                <img src="img/logo.png" alt="AI Platform Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-xl font-bold tracking-tight text-primary sidebar-text pl-1">AI Platform</h1>
         </div>
-        <h1 class="text-xl font-bold tracking-tight text-primary sidebar-text pl-1">AI Platform</h1>
-    </div>
 
-    <!-- Navigation Links -->
-    <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto overflow-x-hidden">
+        <!-- Navigation Links -->
+        <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto overflow-x-hidden">
 
-        <!-- 儀表版 -->
-        <a id="nav-dashboard" href="index.html"
-            class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
-            <i data-lucide="layout-dashboard"
-                class="w-5 h-5 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-            <span class="font-medium sidebar-text pl-3">儀表版</span>
-        </a>
-
-        <!-- AI 應用入口 Group — class 由 components.js 動態設定 -->
-        <div id="nav-group" class="flex flex-col space-y-1">
-
-            <!-- 主分類（index 頁面 active 由 JS 設定） -->
-            <a id="nav-main" href="index.html"
-                class="sidebar-item flex items-center justify-between px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
-                <div class="flex items-center space-x-3 overflow-hidden">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-textMuted group-hover:text-primary flex-shrink-0"></i>
-                    <span class="font-bold sidebar-text pl-3">生成式AI應用入口</span>
-                </div>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-textMuted flex-shrink-0 sidebar-arrow"></i>
+            <!-- 儀表版 -->
+            <a id="nav-dashboard" href="index.html"
+                class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
+                <i data-lucide="layout-dashboard"
+                    class="w-5 h-5 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                <span class="font-medium sidebar-text pl-3">儀表版</span>
             </a>
 
-            <!-- Sub-menu -->
-            <div class="sidebar-sub-container ml-5 border-l border-border mt-1 flex flex-col space-y-1 transition-all">
+            <!-- AI 應用入口 Group — class 由 components.js 動態設定 -->
+            <div id="nav-group" class="flex flex-col space-y-1">
 
-                <!-- 華寶 (AI助理系統) -->
-                <a href="assistant.html" data-nav-key="assistant"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="bot"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">華寶 (AI助理系統)</span>
+                <!-- 主分類（index 頁面 active 由 JS 設定） -->
+                <a id="nav-main" href="index.html"
+                    class="sidebar-item flex items-center justify-between px-4 py-3 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <i data-lucide="sparkles"
+                            class="w-5 h-5 text-textMuted group-hover:text-primary flex-shrink-0"></i>
+                        <span class="font-bold sidebar-text pl-3">生成式AI應用入口</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-textMuted flex-shrink-0 sidebar-arrow"></i>
                 </a>
 
-                <!-- 文件翻譯 -->
-                <a href="translation.html" data-nav-key="translation"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="languages"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">文件翻譯</span>
-                </a>
+                <!-- Sub-menu -->
+                <div
+                    class="sidebar-sub-container ml-5 border-l border-border mt-1 flex flex-col space-y-1 transition-all">
 
-                <!-- 語音會議記錄逐字稿 -->
-                <a href="transcription.html" data-nav-key="transcription"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="mic"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">語音會議記錄逐字稿</span>
-                </a>
+                    <!-- 華寶 (AI助理系統) -->
+                    <a href="assistant.html" data-nav-key="assistant"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="bot"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">華寶 (AI助理系統)</span>
+                    </a>
 
-                <!-- 會議記錄整理 -->
-                <a href="minutes.html" data-nav-key="minutes"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="file-text"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">會議記錄整理</span>
-                </a>
+                    <!-- 文件翻譯 -->
+                    <a href="translation.html" data-nav-key="translation"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="languages"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">文件翻譯</span>
+                    </a>
 
-                <!-- 時事模擬情境 -->
-                <a href="simulation.html" data-nav-key="simulation"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="lightbulb"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">時事模擬情境</span>
-                </a>
+                    <!-- 語音會議記錄逐字稿 -->
+                    <a href="transcription.html" data-nav-key="transcription"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="mic"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">語音會議記錄逐字稿</span>
+                    </a>
 
-                <!-- 金融業法規摘要 -->
-                <a href="regulations.html" data-nav-key="regulations"
-                    class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
-                    <i data-lucide="scale"
-                        class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
-                    <span class="font-medium text-[13px] sidebar-text pl-3">金融業法規摘要</span>
-                </a>
+                    <!-- 會議記錄整理 -->
+                    <a href="minutes.html" data-nav-key="minutes"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="file-text"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">會議記錄整理</span>
+                    </a>
+
+                    <!-- 時事模擬情境 -->
+                    <a href="simulation.html" data-nav-key="simulation"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="lightbulb"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">時事模擬情境</span>
+                    </a>
+
+                    <!-- 金融業法規摘要 -->
+                    <a href="regulations.html" data-nav-key="regulations"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="scale"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">金融業法規摘要</span>
+                    </a>
+                </div>
             </div>
-        </div>
-    </nav>
-</aside>
+        </nav>
+    </aside>
 
     <!-- Main Content Context -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-background">
@@ -219,76 +233,81 @@
     </header>
 -->
 
-<!-- Notification Button -->
-<button
-    class="relative p-2 rounded-full hover:bg-gray-100 transition-colors text-textMuted hover:text-primary cursor-pointer"
-    aria-label="通知">
-    <i data-lucide="bell" class="w-5 h-5"></i>
-    <!-- 未讀紅點 -->
-    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-</button>
+                    <!-- Notification Button -->
+                    <button
+                        class="relative p-2 rounded-full hover:bg-gray-100 transition-colors text-textMuted hover:text-primary cursor-pointer"
+                        aria-label="通知">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <!-- 未讀紅點 -->
+                        <span
+                            class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
 
-<!-- User Profile Dropdown -->
-<div class="relative" id="userMenuContainer">
-    <!-- User Profile Display (Trigger) -->
-    <div id="userMenuButton"
-        class="flex items-center space-x-3 cursor-pointer p-1.5 pr-3 rounded-full hover:bg-gray-50 border border-transparent transition-all">
-        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
-            G
-        </div>
-        <div class="hidden md:flex flex-col">
-            <span class="font-semibold text-sm leading-tight text-text">姓名</span>
-            <span class="text-[8px] text-textMuted leading-tight">員工編號</span>
-        </div>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-textMuted transition-transform duration-200"
-            id="userMenuArrow"></i>
-    </div>
+                    <!-- User Profile Dropdown -->
+                    <div class="relative" id="userMenuContainer">
+                        <!-- User Profile Display (Trigger) -->
+                        <div id="userMenuButton"
+                            class="flex items-center space-x-3 cursor-pointer p-1.5 pr-3 rounded-full hover:bg-gray-50 border border-transparent transition-all">
+                            <div
+                                class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold">
+                                G
+                            </div>
+                            <div class="hidden md:flex flex-col">
+                                <span class="font-semibold text-sm leading-tight text-text">姓名</span>
+                                <span class="text-[8px] text-textMuted leading-tight">員工編號</span>
+                            </div>
+                            <i data-lucide="chevron-down"
+                                class="w-4 h-4 text-textMuted transition-transform duration-200" id="userMenuArrow"></i>
+                        </div>
 
-    <!-- Dropdown Menu -->
-    <div id="userDropdown"
-        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-2 z-50 transform origin-top-right transition-all duration-200 opacity-0 -translate-y-2">
-        <button id="logoutBtn"
-            class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer group">
-            <i data-lucide="log-out" class="w-4 h-4 mr-3 group-hover:scale-110 transition-transform"></i>
-            登出系統
-        </button>
-    </div>
-</div>
+                        <!-- Dropdown Menu -->
+                        <div id="userDropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-border py-2 z-50 transform origin-top-right transition-all duration-200 opacity-0 -translate-y-2">
+                            <button id="logoutBtn"
+                                class="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer group">
+                                <i data-lucide="log-out"
+                                    class="w-4 h-4 mr-3 group-hover:scale-110 transition-transform"></i>
+                                登出系統
+                            </button>
+                        </div>
+                    </div>
 
-<!-- Logout Confirmation Modal -->
-<div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="logoutModalBackdrop"></div>
+                    <!-- Logout Confirmation Modal -->
+                    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+                        <!-- Backdrop -->
+                        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+                            id="logoutModalBackdrop"></div>
 
-    <!-- Modal Content -->
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all duration-300 opacity-0 scale-95"
-        id="logoutModalContent">
-        <div class="flex flex-col items-center text-center">
-            <!-- Warning Icon -->
-            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
-                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
-            </div>
+                        <!-- Modal Content -->
+                        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all duration-300 opacity-0 scale-95"
+                            id="logoutModalContent">
+                            <div class="flex flex-col items-center text-center">
+                                <!-- Warning Icon -->
+                                <div
+                                    class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-6">
+                                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                                </div>
 
-            <h3 class="text-xl font-bold text-text mb-2">確認要登出系統嗎？</h3>
-            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full">
-                <button id="logoutCancel"
-                    class="flex-1 px-6 py-3 rounded-xl border border-border text-text font-semibold hover:bg-gray-50 transition-colors cursor-pointer">
-                    取消
-                </button>
-                <button id="logoutConfirm"
-                    class="flex-1 px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 shadow-lg shadow-red-200 transition-all cursor-pointer">
-                    登出
-                </button>
-            </div>
-        </div>
+                                <h3 class="text-xl font-bold text-text mb-2">確認要登出系統嗎？</h3>
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full">
+                                    <button id="logoutCancel"
+                                        class="flex-1 px-6 py-3 rounded-xl border border-border text-text font-semibold hover:bg-gray-50 transition-colors cursor-pointer">
+                                        取消
+                                    </button>
+                                    <button id="logoutConfirm"
+                                        class="flex-1 px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 shadow-lg shadow-red-200 transition-all cursor-pointer">
+                                        登出
+                                    </button>
+                                </div>
+                            </div>
 
-        <!-- Close Button -->
-        <button id="logoutClose"
-            class="absolute top-4 right-4 p-2 text-textMuted hover:text-text hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-    </div>
-</div>
+                            <!-- Close Button -->
+                            <button id="logoutClose"
+                                class="absolute top-4 right-4 p-2 text-textMuted hover:text-text hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -312,7 +331,7 @@
                     </div>
 
                     <!-- 聊天互動介面 (Chat UI) -->
-                    <div
+                    <div id="chatContainer"
                         class="flex-1 overflow-y-auto no-scrollbar bg-gray-50/50 rounded-xl border border-border p-6 flex flex-col space-y-6 mb-6">
 
                         <!-- AI Bubble -->
@@ -339,7 +358,7 @@
                             class="relative flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
                             <!-- 情境選擇器 (上拉式選單概念) -->
                             <div class="relative flex-shrink-0 w-full sm:w-auto">
-                                <select
+                                <select id="contextSelect"
                                     class="block w-full sm:w-36 appearance-none rounded-xl border border-border bg-gray-50 hover:bg-white py-3.5 pl-4 pr-10 text-sm font-bold text-primary focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors cursor-pointer shadow-sm">
                                     <option value="">請選擇</option>
                                     <option value="hr">人資</option>
@@ -349,7 +368,7 @@
                                     <option value="fx">外匯</option>
                                     <option value="credit">徵信授信</option>
                                     <option value="center">勤務中心555</option>
-                                    <option value="center">不分類</option>
+                                    <option value="none">不分類</option>
 
                                 </select>
                                 <div
@@ -367,11 +386,11 @@
                                 </button>
 
                                 <!-- 文字輸入框 -->
-                                <input type="text" placeholder="請輸入您的問題，例如：「我想查詢存匯業務的最新規範...」"
+                                <input id="chatInput" type="text" placeholder="請輸入您的問題，例如：「我想查詢存匯業務的最新規範...」"
                                     class="w-full pl-14 pr-32 py-3.5 bg-gray-50 hover:bg-white border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-sm transition-all text-text">
 
                                 <!-- 填完送出 CTA 按鈕 -->
-                                <button
+                                <button id="sendBtn"
                                     class="absolute right-2 px-5 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primaryHover transition-colors shadow-sm flex items-center">
                                     <span class="mr-1.5">填完送出</span>
                                     <i data-lucide="send" class="w-3.5 h-3.5"></i>
@@ -385,6 +404,139 @@
         </div>
     </main>
 
+    <script src="js/mock-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatContainer = document.getElementById('chatContainer');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const contextSelect = document.getElementById('contextSelect');
+
+            function getCurrentTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                return `今天 ${hours}:${minutes}`;
+            }
+
+            function appendMessage(text, isUser = false, sources = []) {
+                const time = getCurrentTime();
+                const bubble = document.createElement('div');
+                bubble.className = isUser ? "flex items-start justify-end" : "flex items-start";
+
+                if (isUser) {
+                    bubble.innerHTML = `
+                        <div class="flex-1 max-w-[85%] sm:max-w-[75%] flex flex-col items-end">
+                            <div class="bg-primary text-white rounded-2xl rounded-tr-sm p-4 shadow-sm text-sm leading-relaxed">
+                                <p>${text}</p>
+                            </div>
+                            <div class="text-xs text-textMuted mt-2 mr-1 font-medium">${time}</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary ml-4 flex-shrink-0 shadow-md ring-4 ring-blue-50 font-bold">
+                            G
+                        </div>
+                    `;
+                } else {
+                    let sourcesHtml = '';
+                    if (sources && sources.length > 0) {
+                        const badges = sources.map((source, index) => `
+                            <a href="${source.link || 'assistant-files.html'}" target="_blank" class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-[11px] font-bold bg-blue-50 text-primary border border-blue-100 hover:bg-primary hover:text-white transition-all shadow-sm group">
+                                <i data-lucide="file-search" class="w-3.5 h-3.5 text-primary group-hover:text-white transition-colors"></i>
+                                <span>${index + 1}. ${source.keyword || '相關文件'}</span>
+                            </a>
+                        `).join('');
+
+                        sourcesHtml = `
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex flex-wrap gap-2">
+                                ${badges}
+                            </div>
+                        `;
+                    }
+
+                    bubble.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white mr-4 flex-shrink-0 shadow-md ring-4 ring-blue-50">
+                            <i data-lucide="bot" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1 max-w-[85%] sm:max-w-[75%]">
+                            <div class="bg-white border border-border rounded-2xl rounded-tl-sm p-4 shadow-sm text-sm text-text leading-relaxed">
+                                <p>${text}</p>
+                                ${sourcesHtml}
+                            </div>
+                            <div class="text-xs text-textMuted mt-2 ml-1 font-medium">${time}</div>
+                        </div>
+                    `;
+                }
+
+                chatContainer.appendChild(bubble);
+
+                // Re-create lucide icons for the new bubble
+                if (!isUser) {
+                    lucide.createIcons();
+                }
+
+                // Scroll to bottom
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+
+            const toast = document.getElementById('toast');
+
+            function showToast() {
+                toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+                toast.classList.add('translate-y-0', 'opacity-100');
+
+                setTimeout(() => {
+                    toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 3000);
+            }
+
+            function handleSendMessage() {
+                // 0. Validation: Must select a context
+                if (!contextSelect.value) {
+                    showToast();
+                    return;
+                }
+
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                // 1. Append User Message
+                appendMessage(text, true);
+                chatInput.value = '';
+
+                // 2. Simulate AI thinking and reply after 1s
+                setTimeout(() => {
+                    // Check for keywords first
+                    let response = "";
+                    let sources = [];
+                    const matchedKeyword = AI_MOCK_DATA.keywordMappings.find(kr =>
+                        kr.keywords.some(k => text.includes(k))
+                    );
+
+                    if (matchedKeyword) {
+                        response = matchedKeyword.response;
+                        sources = matchedKeyword.sources || [];
+                    } else {
+                        const context = contextSelect.value || 'default';
+                        response = AI_MOCK_DATA.responses[context] || AI_MOCK_DATA.responses['default'];
+                    }
+
+                    appendMessage(response, false, sources);
+                }, 1000);
+            }
+
+            sendBtn.addEventListener('click', handleSendMessage);
+
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+        });
+    </script>
     <script src="js/components.js"></script>
 </body>
 
