@@ -122,6 +122,7 @@
             'minutes': 'minutes',
             'regulations': 'regulations',
             'simulation': 'simulation',
+            'outline': 'outline',
         };
 
         if (page === 'index') {

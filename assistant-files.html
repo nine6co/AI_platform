@@ -148,6 +148,14 @@
                             class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
                         <span class="font-medium text-[13px] sidebar-text pl-3">金融業法規摘要</span>
                     </a>
+
+                    <!-- 大綱產生情境 -->
+                    <a href="outline.html" data-nav-key="outline"
+                        class="sidebar-item sidebar-sub-item flex items-center space-x-3 px-4 py-2.5 rounded-lg text-textMuted hover:bg-gray-100 hover:text-primary transition-colors group cursor-pointer ml-1">
+                        <i data-lucide="wand-2"
+                            class="w-4 h-4 text-textMuted group-hover:text-primary transition-colors flex-shrink-0"></i>
+                        <span class="font-medium text-[13px] sidebar-text pl-3">大綱產生情境</span>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -333,7 +341,7 @@
                                                     <a href="#"
                                                         class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
                                                             data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
-                                                    <a href="#"
+                                                    <a href="files/特休計算方式.pdf" download
                                                         class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
                                                             data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
                                                 </div>
@@ -356,7 +364,7 @@
                                         2026-04-21 22:38
                                     </td>
                                     <td class="px-4 py-4 text-text">
-                                        系統管理員
+                                        張小晴
                                     </td>
                                 </tr>
                                 <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
@@ -378,7 +386,7 @@
                                                     <a href="#"
                                                         class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
                                                             data-lucide="eye" class="w-3.5 h-3.5 mr-2"></i>預覽</a>
-                                                    <a href="#"
+                                                    <a href="files/2026年度員工特別休假實施辦法.pdf" download
                                                         class="block px-4 py-2 text-sm text-text hover:bg-gray-50 flex items-center"><i
                                                             data-lucide="download" class="w-3.5 h-3.5 mr-2"></i>下載</a>
                                                 </div>
@@ -401,7 +409,7 @@
                                         2026-04-21 21:58
                                     </td>
                                     <td class="px-4 py-4 text-text">
-                                        系統管理員
+                                        林大強
                                     </td>
                                 </tr>
                                 <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
@@ -650,7 +658,7 @@
             const query = urlParams.get('q');
             if (query && searchInput) {
                 searchInput.value = query;
-                
+
                 // Also handle automatic category selection if matching
                 const options = Array.from(categoryFilter.options);
                 const matchedOption = options.find(opt => opt.text === query || opt.value === query);
@@ -668,14 +676,14 @@
                 const filteredRows = allRows.filter(row => {
                     const fileName = row.cells[0].textContent.toLowerCase();
                     const fileCategory = row.cells[2].textContent.trim();
-                    
+
                     const matchesCategory = category === 'all' || fileCategory.includes(category);
-                    
+
                     // 關鍵字搜尋：同時比對「檔案名稱」與「檔案分類」
-                    const matchesKeyword = keyword === '' || 
-                                         fileName.includes(keyword) || 
-                                         fileCategory.toLowerCase().includes(keyword);
-                    
+                    const matchesKeyword = keyword === '' ||
+                        fileName.includes(keyword) ||
+                        fileCategory.toLowerCase().includes(keyword);
+
                     return matchesCategory && matchesKeyword;
                 });
 
@@ -754,7 +762,7 @@
                     const matchesKeyword = keyword === '' || row.cells[0].textContent.toLowerCase().includes(keyword);
                     return matchesCategory && matchesKeyword;
                 }).length;
-                
+
                 const totalPages = Math.ceil(filteredTotal / limit);
                 if (currentPage < totalPages) {
                     currentPage++;
@@ -771,11 +779,11 @@
             // 動態搜尋：監聽輸入框 input 變動 (實時過濾)
             searchInput.addEventListener('input', () => {
                 const keyword = searchInput.value.trim();
-                
+
                 // 自動偵測：如果關鍵字剛好匹配某個分類，自動切換下拉選單
                 const options = Array.from(categoryFilter.options);
                 const matchedOption = options.find(opt => opt.text === keyword || opt.value === keyword);
-                
+
                 if (matchedOption && keyword !== '') {
                     categoryFilter.value = matchedOption.value;
                     // searchInput.value = ''; // 選項：匹配後是否清除關鍵字？通常保留較好
